@@ -14,6 +14,8 @@ import datetime  # 可以用来处理时间相关的数据
 # 使用 load_workbook.remove() 可以移除 Excel 文件中的不同的表格
 # Workbook().save('name.xlsx') 可以将对应的 Workbook 保存到本地
 
+max_row = 486
+
 
 def combine():
     # 该函数可以用来处理原数据文件：
@@ -25,11 +27,11 @@ def combine():
     combine_sheet = wb.create_sheet('combine')
     heading = ['创建时间', '课程名称', '学习人数', '学习时间']
     combine_sheet.append(heading)
-    for row in range(2, 486):
+    for row in range(2, max_row):
         for col in range(1, 4):
             combine_sheet.cell(row=row, column=col, value=student_sheet.cell(row=row, column=col).value)
             if col == 3:
-                for r in range(2, 486):
+                for r in range(2, max_row):
                     if student_sheet.cell(row=row, column=2).value == time_sheet.cell(row=r, column=2).value:
                         combine_sheet.cell(row=row, column=col + 1, value=time_sheet.cell(row=r, column=3).value)
     wb.save('courses.xlsx')
@@ -46,7 +48,7 @@ def split():
 
     # 获取第一列数
     years = []
-    for row in range(2, 486):
+    for row in range(2, max_row):
         create_time = combine_sheet.cell(row=row, column=1).value
         create_year = create_time.year
         # 文件目录
@@ -59,7 +61,7 @@ def split():
         ws.title = str(year)
         heading = ['创建时间', '课程名称', '学习人数', '学习时间']
         ws.append(heading)
-        for row in range(2, 486):
+        for row in range(2, max_row):
             result = []
             if combine_sheet.cell(row=row, column=1).value.year == year:
                 for i in range(1, 5):
